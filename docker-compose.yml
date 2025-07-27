@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - go-modules:/go/pkg/mod
+    ports:
+      - "8080:8080"
+    env_file:
+        - .env
+volumes:
+  go-modules:

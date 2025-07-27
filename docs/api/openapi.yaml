@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: Email Notification Microservice API
+  description: REST API for enqueuing and managing email sending jobs.
+  version: "1.0"
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /send:
+    post:
+      summary: Enqueue an email job
+      operationId: sendEmail
+      requestBody:
+        description: Email job payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailJob'
+      responses:
+        '200':
+          description: Email enqueued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email enqueued successfully
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Queue is full or temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  uptime:
+                    type: string
+                    example: 16m34s
+                  queue_depth:
+                    type: integer
+                    example: 23
+                  workers_active:
+                    type: integer
+                    example: 5
+        '503':
+          description: Service is degraded or non-functional
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    EmailJob:
+      type: object
+      required:
+        - to
+        - subject
+        - body
+      properties:
+        to:
+          type: string
+          format: email
+          example: user@example.com
+        subject:
+          type: string
+          example: Welcome to our platform
+        body:
+          type: string
+          example: "<p>Hello and welcome!</p>"
+        is_html:
+          type: boolean
+          default: false
+          example: true
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Missing required field: 'to'
