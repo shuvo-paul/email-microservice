@@ -6,25 +6,10 @@ import (
 	"github.com/shuvo-paul/email-microservice/internal/models"
 	"github.com/shuvo-paul/email-microservice/internal/queue"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
-type mockQueue struct {
-	mock.Mock
-	jobs chan models.EmailRequest
-}
-
-func (q *mockQueue) Enqueue(job models.EmailRequest) error {
-	args := q.Called(job)
-	return args.Error(0)
-}
-
-func (q *mockQueue) Jobs() <-chan models.EmailRequest {
-	return q.jobs
-}
-
 func TestEmailService_Success(t *testing.T) {
-	q := new(mockQueue)
+	q := new(queue.MockQueue)
 	s := NewEmailService(q)
 
 	email := models.EmailRequest{
@@ -41,7 +26,7 @@ func TestEmailService_Success(t *testing.T) {
 }
 
 func TestEmailService_Send_QueueError(t *testing.T) {
-	q := new(mockQueue)
+	q := new(queue.MockQueue)
 	s := NewEmailService(q)
 
 	email := models.EmailRequest{

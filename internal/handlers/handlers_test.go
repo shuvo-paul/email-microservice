@@ -29,17 +29,8 @@ func TestHealthHandler(t *testing.T) {
 	}
 }
 
-type MockEmailService struct {
-	mock.Mock
-}
-
-func (m *MockEmailService) Send(email models.EmailRequest) error {
-	args := m.Called(email)
-	return args.Error(0)
-}
-
 func TestEmailHandler_Success(t *testing.T) {
-	mocksvc := new(MockEmailService)
+	mocksvc := new(service.MockEmailService)
 
 	reqBody := models.EmailRequest{
 		To:      "test@example.org",
@@ -62,7 +53,7 @@ func TestEmailHandler_Success(t *testing.T) {
 }
 
 func TestEmailHandler_ValidationFailure(t *testing.T) {
-	mocksvc := new(MockEmailService)
+	mocksvc := new(service.MockEmailService)
 	handler := NewEmailHandler(mocksvc)
 
 	tests := []struct {
@@ -111,7 +102,7 @@ func TestEmailHandler_ValidationFailure(t *testing.T) {
 }
 
 func TestSendEmail_ServiceError(t *testing.T) {
-	mocksvg := new(MockEmailService)
+	mocksvg := new(service.MockEmailService)
 	mocksvg.On("Send", mock.Anything).Return(service.ErrSendingEmail)
 
 	reqBody := models.EmailRequest{
