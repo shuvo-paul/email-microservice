@@ -26,9 +26,9 @@ func NewQueue(size int) *InMemoryQueue {
 	}
 }
 
-func (q *InMemoryQueue) Enqueue(emailRequest models.EmailRequest) error {
+func (q *InMemoryQueue) Enqueue(job models.EmailRequest) error {
 	select {
-	case q.jobs <- emailRequest:
+	case q.jobs <- job:
 		return nil
 	default:
 		return ErrQueueFull
