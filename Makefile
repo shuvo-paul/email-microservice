@@ -4,7 +4,7 @@ build:
 	go build -o ./tmp/main ./cmd/server/main.go
 
 test:
-	go test ./..
+	go test ./...
 
 run:
 	./tmp/main
