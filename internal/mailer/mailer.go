@@ -10,7 +10,7 @@ import (
 )
 
 type Sender interface {
-	Send(string, string, string) error
+	Send(to, subject, body string) error
 }
 
 type SMTPSender struct {

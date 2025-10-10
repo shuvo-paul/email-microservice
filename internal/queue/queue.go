@@ -38,3 +38,7 @@ func (q *InMemoryQueue) Enqueue(job models.EmailRequest) error {
 func (q *InMemoryQueue) Jobs() <-chan models.EmailRequest {
 	return q.jobs
 }
+
+func (q *InMemoryQueue) Close() {
+	close(q.jobs)
+}
