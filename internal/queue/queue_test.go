@@ -39,3 +39,25 @@ func TestQueue_Enqueue_Overflow(t *testing.T) {
 	assert.Error(t, err)
 	assert.Equal(t, err, ErrQueueFull)
 }
+
+func Test_Close(t *testing.T) {
+	q := NewQueue(2)
+
+	q.Enqueue(
+		models.EmailRequest{
+			Subject: "Test Subject",
+		},
+	)
+
+	q.Close()
+
+	_, ok := <-q.Jobs()
+	assert.True(t, ok)
+	_, ok = <-q.Jobs()
+	assert.False(t, ok)
+
+	defer func() {
+		assert.NotNil(t, recover())
+	}()
+	q.Enqueue(models.EmailRequest{Subject: "Test"})
+}
