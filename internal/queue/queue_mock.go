@@ -18,3 +18,10 @@ func (q *MockQueue) Enqueue(job models.EmailRequest) error {
 func (q *MockQueue) Jobs() <-chan models.EmailRequest {
 	return q.jobs
 }
+
+func (q *MockQueue) Close() {
+	q.Called()
+	if q.jobs != nil {
+		close(q.jobs)
+	}
+}

@@ -12,6 +12,7 @@ var ErrQueueFull = errors.New("queue full")
 type Queue interface {
 	Enqueue(models.EmailRequest) error
 	Jobs() <-chan models.EmailRequest
+	Close()
 }
 
 var _ Queue = (*InMemoryQueue)(nil)
