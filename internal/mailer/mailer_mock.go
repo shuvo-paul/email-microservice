@@ -11,6 +11,10 @@ func (m *MockClient) Send(to, subject, body string) error {
 	return args.Error(0)
 }
 
+func NewMockSender() *MockSender {
+	return &MockSender{}
+}
+
 type MockSender struct {
 	mock.Mock
 }
