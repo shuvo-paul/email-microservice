@@ -21,6 +21,22 @@ type SMTPSender struct {
 	from     string
 }
 
+func NewSMTPSender(
+	host string,
+	port int,
+	username string,
+	password string,
+	from string,
+) SMTPSender {
+	return SMTPSender{
+		host:     host,
+		port:     port,
+		username: username,
+		password: password,
+		from:     from,
+	}
+}
+
 func (s *SMTPSender) Send(to, subject, body string) error {
 	addr := fmt.Sprintf("%s:%d", s.host, s.port)
 	auth := smtp.PlainAuth("", s.username, s.password, s.host)
